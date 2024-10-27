@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twenty One Pilots</title>
+  <script>
+    let documentoLink = '';
+
+    function configurarArrastarSoltar() {
+      const dropArea = document.getElementById('drop-area');
+
+      dropArea.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropArea.classList.add('active');
+      });
+
+      dropArea.addEventListener('dragleave', () => {
+        dropArea.classList.remove('active');
+      });
+
+      dropArea.addEventListener('drop', (event) => {
+        event.preventDefault();
+        dropArea.classList.remove('active');
+        const file = event.dataTransfer.files[0];
+
+        if (file) {
+          documentoLink = URL.createObjectURL(file);
+          dropArea.innerText = `Documento adicionado: ${file.name}`;
+        }
+      });
+    }
+
+    function validarFormulario() {
+      const campos = ['nome', 'sobrenome', 'rg', 'cpf', 'emailCadastro', 'dataNascimento', 'cidade'];
+      let valido = true;
+
+      campos.forEach(campoId => {
+        const campo = document.getElementById(campoId);
+        if (!campo.value) {
+          alert(`Por favor, preencha o campo: ${campo.name || campoId}`);
+          valido = false;
+        }
+      });
+
+      if (!documentoLink) {
+        alert("Por favor, adicione um documento.");
+        valido = false;
+      }
+
+      return valido;
+    }
+
+    function salvarDados() {
+      const nome = document.getElementById('nome').value;
+      const sobrenome = document.getElementById('sobrenome').value;
+      const rg = document.getElementById('rg').value;
+      const cpf = document.getElementById('cpf').value;
+      const email = document.getElementById('emailCadastro').value;
+      const dataNascimento = document.getElementById('dataNascimento').value;
+      const cidade = document.getElementById('cidade').value;
+      
+      if (!nome || !sobrenome || !rg || !cpf || !email || !dataNascimento || !cidade || !documentoLink) {
+        alert('Por favor, preencha todos os campos antes de salvar.');
+        return;
+      }
+      
+      const dadosUsuario = {
+        nome,
+        sobrenome,
+        rg,
+        cpf,
+        email,
+        dataNascimento,
+        cidade,
+        documento: documentoLink
+      };
+      localStorage.setItem("usuario", JSON.stringify(dadosUsuario));
+      alert("Dados Cadastrados");
+    }
+    
+    function exibirDados() {
+      const dados = JSON.parse(localStorage.getItem("usuario"));
+      if (dados) {
+        const dadosSalvos = `
+          <strong>Dados salvos:</strong><br>
+          Nome: ${dados.nome} ${dados.sobrenome} </br>
+          RG: ${dados.rg} </br>
+          CPF: ${dados.cpf} </br>
+          Email: ${dados.email} </br>
+          Data de Nascimento: ${dados.dataNascimento} </br>
+          Cidade: ${dados.cidade} </br>
+          Documento: <a href="${dados.documento}" target="_blank">Acessar Documento</a></br>`;
+          document.getElementById('dadosSalvos').innerHTML = dadosSalvos;
+      } 
+    }
+    
+    function exibirEscolhasFavoritas() {
+      const cor = document.getElementById('color').value;
+      const data = document.getElementById('data').value;
+      const hora = document.getElementById('hora').value;
+      const range = document.getElementById('range').value;
+      const url = document.getElementById('url').value;
+
+      const escolhasFavoritas = `
+        Suas Escolhas Favoritas: </br>
+        Cor Favorita: ${cor} </br>
+        Data do Show Favorita: ${data} </br>
+        Horário Ideal do Show: ${hora} </br>
+        Classificação do Último Álbum: ${range} </br>
+        Post Favorito: <a href="${url}" target="_blank">${url}</a>`;
+      
+      document.getElementById('escolhasFavoritas').innerHTML = escolhasFavoritas;
+    }
+
+    window.onload = configurarArrastarSoltar;
+  </script>
+  <style>
+    #drop-area {
+      border: 2px dashed #ccc;
+      padding: 20px;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    #drop-area.active {
+      border-color: #000;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bem-vindo ao Site sobre Twenty One Pilots</h1>
+    <nav>
+      <ul>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#conteudo">Conteúdo</a></li>
+        <li><a href="#cadastro">Cadastro para Notícias</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <main>
+    <section id="sobre">
+      <h2>Sobre o Site</h2>
+      <p>Bem-vindo ao nosso site dedicado a <strong>Twenty One Pilots</strong>, uma das bandas mais inovadoras e influentes da cena musical contemporânea. Este espaço foi criado para celebrar a arte, a música e a conexão que a banda estabelece com seus fãs ao redor do mundo.</p>
+      
+      <p>Aqui, você encontrará uma variedade de conteúdos, incluindo:</p>
+      <ul>
+        <li><strong>Notícias e Atualizações:</strong> Fique por dentro das últimas novidades sobre a banda, lançamentos de álbuns, turnês e eventos especiais.</li>
+        <li><strong>Conteúdo Multimídia:</strong> Explore uma coleção de podcasts, vídeos e clipes que mostram o talento e a criatividade de Tyler Joseph e Josh Dun.</li>
+        <li><strong>Formulários de Cadastro:</strong> Cadastre-se para receber novidades e se conectar com outros fãs. Você poderá compartilhar suas experiências e preferências sobre a banda.</li>
+      </ul>
+      
+      <p>Nosso objetivo é criar uma comunidade vibrante e acolhedora para todos os fãs, onde podemos compartilhar nossa paixão pela música e pela mensagem única que a banda transmite. Seja você um fã de longa data ou alguém que acabou de descobrir a banda, sinta-se em casa!</p>
+    </section>
+    <section id="conteudo">
+      <h2>Conteúdo Multimídia de Twenty One Pilots</h2>
+      <article>
+        <h3>Podcast sobre o novo álbum Clancy</h3>
+        <audio controls>
+          <source src="podcastTOP.mp3" type="audio/mpeg">
+        </audio>
+      </article>
+      <article>
+        <h3>Twenty One Pilots: "Routines in the Night" no The Tonight Show com Jimmy Fallon</h3>
+        <video src="videoTOP.mp4" controls autoplay muted loop width="400"></video>
+      </article>
+    </section>
+    
+    <section>
+      <h2>Escolhas Favoritas</h2>
+      <form>
+        <label for="cor">Escolha sua cor favorita da capa do album da banda:</label>
+        <input type="color" id="color" name="cor">
+
+        <label for="data">Selecione uma data de show favorita:</label>
+        <input type="date" id="data" name="data" min="2023-01-01" max="2024-12-31">
+
+        <label for="hora">Escolha um horário ideal para o show:</label>
+        <input type="time" id="hora" name="hora">
+
+        <label for="range">Classifique do último álbum lançado:</label>
+        <input type="range" id="range" name="range" min="1" max="10"><br><br>
+
+        <label for="url">Seu post favorito sobre Twenty One Pilots:</label>
+        <input type="url" id="url" name="url">
+        <button type="button" onclick="exibirEscolhasFavoritas()">Exibir Escolhas Favoritas</button>
+      </form>
+      <p id="escolhasFavoritas"></p>
+    </section>
+
+    <section>
+      <h2>Formulário de Cadastro para Notícias</h2>
+      <form id="cadastro">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome"><br><br>
+        
+        <label for="sobrenome">Sobrenome:</label>
+        <input type="text" id="sobrenome" name="sobrenome"><br><br>
+
+        <label for="rg">RG:</label>
+        <input type="number" id="rg" name="rg" pattern="\d{10}"><br><br>
+
+        <label for="cpf">CPF:</label>
+        <input type="number" id="cpf" name="cpf" pattern="\d{11}"><br><br>
+
+        <label for="emailCadastro">E-mail:</label>
+        <input type="email" id="emailCadastro" name="email"><br><br>
+
+        <label for="dataNascimento">Data de Nascimento:</label>
+        <input type="date" id="dataNascimento" name="dataNascimento"><br><br>
+
+        <label for="cidade">Cidade:</label>
+        <input list="cidades" id="cidade" name="cidade">
+        <datalist id="cidades">
+          <option value="São Paulo">
+          <option value="Rio de Janeiro">
+          <option value="Belo Horizonte">
+          <option value="Curitiba">
+          <option value="Brasília">
+        </datalist>
+        <br><br>
+        
+        <div id="drop-area">Arraste e solte seu documento aqui ou clique para selecionar</div>
+        <button type="button" onclick="salvarDados()">Cadastrar</button>
+        <button type="button" onclick="exibirDados()">Exibir dados cadastrados</button>
+        <p id="dadosSalvos"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 - Site sobre Twenty One Pilots</p>
+  </footer>
+</body>
+</html>
